@@ -79,6 +79,7 @@ vocabularyChecks <- function (connectionDetails,
   vocabularyCounts <- executeQuery(outputFolder,"vocabulary_tables_count.sql", "Count on vocabulary tables query executed successfully", connectionDetails, sqlOnly, cdmDatabaseSchema, vocabDatabaseSchema)
   sourceConceptFrequency <- executeQuery(outputFolder,"source_to_concept_map_frequency.sql", "Source to concept map breakdown query executed successfully", connectionDetails, sqlOnly, cdmDatabaseSchema, vocabDatabaseSchema)
   sourceConceptMap <- executeQuery(outputFolder,"get_source_to_concept_map.sql", "Source to concept map query executed successfully", connectionDetails, sqlOnly, cdmDatabaseSchema, vocabDatabaseSchema)
+  unitConceptMap <- executeQuery(outputFolder,"lab_value_unit_check.sql", "Mapped measurement units query executed successfully", connectionDetails, sqlOnly, cdmDatabaseSchema, vocabDatabaseSchema)
 
   version <- conceptCounts$result[conceptCounts$result$ID=='None',]$VERSION
 
@@ -105,7 +106,8 @@ vocabularyChecks <- function (connectionDetails,
                   conceptCounts=conceptCounts,
                   vocabularyCounts=vocabularyCounts,
                   sourceConceptFrequency=sourceConceptFrequency,
-                  sourceConceptMap=sourceConceptMap)
+                  sourceConceptMap=sourceConceptMap,
+                  unitConceptMap=unitConceptMap)
   return(results)
 }
 

@@ -105,6 +105,20 @@ createCohorts <- function(connection,
   counts <- merge(counts, duration, by = "cohortName", all.x = T)
 
   counts <- counts %>% select(cohortDefinitionId, cohortName, recordCount, personCount, totalPersonCount, personProportion, executionTime) %>% arrange(cohortDefinitionId)
-  return(counts)
+
+  cohortMeasurementValues <- executeQuery(outputFolder,"lab_value_within_7days.sql", "Lab-within-7-days query executed successfully for the generated cohorts", connectionDetails, sqlOnly, cdmDatabaseSchema, vocabDatabaseSchema)
+  cohortMeasurementValues <- cohortMeasurementValues %>%
+                                left_join(counts %>% select(cohortDefinitionId, personCount),
+                                  by = c("cohort_definition_id" = "cohortDefinitionId")) %>%
+                                mutate(percent_measured = round(100 * measuredsubjects / personCount, 2))
+  cohortVisitConcepts <- executeQuery(outputFolder,"visit_concept_id_check.sql", "Visit-concept distribution query executed successfully for the generated cohorts", connectionDetails, sqlOnly, cdmDatabaseSchema, vocabDatabaseSchema)
+  cohortVisitConcepts <- merge(cohortVisitConcepts, counts[,c("cohortDefinitionId", "personCount")],
+                                by = "cohortDefinitionId", all.x = TRUE)
+
+  results <- list(cohortCounts=counts,
+                cohortMeasurementValues=cohortMeasurementValues,
+                cohortVisitConcepts=cohortVisitConcepts
+                )
+  return(results)
 }
 

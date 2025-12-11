@@ -4,3 +4,5 @@ atlasId,atlasName,cohortId,name
 3,HT_diagnosis_cdmInspection,3,HT_diagnosis_cdmInspection
 4,HT_diagnosis_drug_ACEIARB_cdmInspection,4,HT_diagnosis_drug_ACEIARB_cdmInspection
 5,MACE_cdmInspection,5,MACE_cdmInspection
+6,[DQ]_3P_MACE_+_unstable_angina,6,[DQ]_3P_MACE_+_unstable_angina
+7,[DQ]_3P_MACE_+_unstable_angina_(any_visit),7,[DQ]_3P_MACE_+_unstable_angina_(any_visit)

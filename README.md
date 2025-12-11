@@ -53,7 +53,7 @@ Installation
 3. In R, use the following commands to download and install CdmInspection:
 
 ```r
-  remotes::install_github("ABMI/CdmInspection", ref = "translate-kor")
+  remotes::install_github("JaehyeongCho/CdmInspection", ref = "translate-kor-jc-kdh")
 ```
 
 User Documentation

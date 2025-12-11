@@ -25,6 +25,8 @@ generateResultsDocumentKor<- function(results, outputFolder, docTemplate="EHDEN"
   } else if(docTemplate == "FEEDERNET"){
     docTemplate <- system.file("templates", "Template-FEEDERNET.docx", package="CdmInspection")
     logo <- system.file("templates", "pics", "feedernet-logo.png", package="CdmInspection")
+  } else if(docTemplate == "KDH"){
+    docTemplate <- system.file("templates", "Template-KDH.docx", package="CdmInspection")
   } else {}
 
   ## open a new doc from the doctemplate
