@@ -152,7 +152,7 @@ my_source_value_count_section_kor <- function (x, data, table_number, domain, ki
   }
 
   if (n>0) {
-    my_body_add_table(x, value = data$result, style = "EHDEN")
+    my_body_add_table(x, value = data$result, style = "Normal Table")
   }
 
   officer::body_add_par(x, paste0("해당 쿼리는 ", sprintf("%.2f", data$duration), "초 동안 수행되었습니다."))

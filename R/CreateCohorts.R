@@ -106,14 +106,32 @@ createCohorts <- function(connection,
 
   counts <- counts %>% select(cohortDefinitionId, cohortName, recordCount, personCount, totalPersonCount, personProportion, executionTime) %>% arrange(cohortDefinitionId)
 
-  cohortMeasurementValues <- executeQuery(outputFolder,"lab_value_within_7days.sql", "Lab-within-7-days query executed successfully for the generated cohorts", connectionDetails, sqlOnly, cdmDatabaseSchema, vocabDatabaseSchema)
+  sql <- SqlRender::loadRenderTranslateSql(sqlFilename = file.path("checks","lab_value_within_7days.sql"),
+                                           packageName = "CdmInspection",
+                                           dbms = connectionDetails$dbms,
+                                           warnOnMissingParameters = FALSE,
+                                           vocabulary_database_schema = vocabDatabaseSchema,
+                                           cdm_database_schema = cdmDatabaseSchema,
+                                           target_database_schema = resultsDatabaseSchema,
+                                           target_cohort_table = cohortTable)
+  cohortMeasurementValues <- DatabaseConnector::querySql(conn, sql)
   cohortMeasurementValues <- cohortMeasurementValues %>%
                                 left_join(counts %>% select(cohortDefinitionId, personCount),
-                                  by = c("cohort_definition_id" = "cohortDefinitionId")) %>%
-                                mutate(percent_measured = round(100 * measuredsubjects / personCount, 2))
-  cohortVisitConcepts <- executeQuery(outputFolder,"visit_concept_id_check.sql", "Visit-concept distribution query executed successfully for the generated cohorts", connectionDetails, sqlOnly, cdmDatabaseSchema, vocabDatabaseSchema)
-  cohortVisitConcepts <- merge(cohortVisitConcepts, counts[,c("cohortDefinitionId", "personCount")],
-                                by = "cohortDefinitionId", all.x = TRUE)
+                                  by = c("COHORT_DEFINITION_ID" = "cohortDefinitionId")) %>%
+                                mutate(percent_measured = round(100 * MEASURED_SUBJECTS / personCount, 2))
+
+  sql <- SqlRender::loadRenderTranslateSql(sqlFilename = file.path("checks","visit_concept_id_check.sql"),
+                                           packageName = "CdmInspection",
+                                           dbms = connectionDetails$dbms,
+                                           warnOnMissingParameters = FALSE,
+                                           vocabulary_database_schema = vocabDatabaseSchema,
+                                           cdm_database_schema = cdmDatabaseSchema,
+                                           target_database_schema = resultsDatabaseSchema,
+                                           target_cohort_table = cohortTable)
+  cohortVisitConcepts <- DatabaseConnector::querySql(conn, sql)
+  cohortVisitConcepts <- cohortVisitConcepts %>%
+                          left_join(counts %>% select(cohortDefinitionId, personCount),
+                                    by = c("COHORT_DEFINITION_ID" = "cohortDefinitionId"))
 
   results <- list(cohortCounts=counts,
                 cohortMeasurementValues=cohortMeasurementValues,
