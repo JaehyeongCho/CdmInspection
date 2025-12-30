@@ -115,6 +115,7 @@ createCohorts <- function(connection,
                                            target_database_schema = resultsDatabaseSchema,
                                            target_cohort_table = cohortTable)
   cohortMeasurementValues <- DatabaseConnector::querySql(conn, sql)
+  colnames(cohortMeasurementValues) <- toupper(colnames(cohortMeasurementValues))
   cohortMeasurementValues <- cohortMeasurementValues %>%
                                 left_join(counts %>% select(cohortDefinitionId, personCount),
                                   by = c("COHORT_DEFINITION_ID" = "cohortDefinitionId")) %>%
@@ -129,6 +130,7 @@ createCohorts <- function(connection,
                                            target_database_schema = resultsDatabaseSchema,
                                            target_cohort_table = cohortTable)
   cohortVisitConcepts <- DatabaseConnector::querySql(conn, sql)
+  colnames(cohortVisitConcepts) <- toupper(colnames(cohortVisitConcepts))
   cohortVisitConcepts <- cohortVisitConcepts %>%
                           left_join(counts %>% select(cohortDefinitionId, personCount),
                                     by = c("COHORT_DEFINITION_ID" = "cohortDefinitionId"))
